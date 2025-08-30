@@ -1,15 +1,34 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
-  role: { type: String, enum: ['admin', 'student', 'company', 'university'], required: true },
-  name: { type: String, required: true },
-  email: { type: String, unique: true, required: true },
-  password: { type: String, required: true },
-  companyName: { type: String },      // for company
-  universityName: { type: String },   // for university
-  adminCode: { type: String },        // for admin (optional, e.g. secret code)
-  otp: { type: String },
-  otpExpires: { type: Date }
-});
+const UserSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true, // Each email must be unique
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ['admin', 'user'],
+    default: 'user',
+  },
+  isVerified: {
+    type: Boolean,
+    default: false, // User is not verified until they enter the OTP
+  },
+  otp: {
+    type: String,
+  },
+  otpExpires: {
+    type: Date,
+  },
+}, { timestamps: true }); // Adds createdAt and updatedAt timestamps
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', UserSchema);
